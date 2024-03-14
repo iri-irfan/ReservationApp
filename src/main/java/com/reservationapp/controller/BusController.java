@@ -1,51 +1,32 @@
 package com.reservationapp.controller;
 
 import com.reservationapp.entity.Bus;
+import com.reservationapp.entity.Driver;
+import com.reservationapp.payload.BusDto;
+import com.reservationapp.repository.BusRepository;
+import com.reservationapp.repository.DriverRepository;
+import com.reservationapp.service.BusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 @RestController
-@RequestMapping("/api/buses")
+@RequestMapping("/bus")
 public class BusController {
+    @Autowired
+    private BusService busService;
 
-//    @Autowired
-//    private BusService busService;
-
-    // Create a new bus using request parameters
-    @PostMapping("/create")
-    public Bus createBus(
-            @RequestParam String busNumber,
-            @RequestParam String busType,
-            @RequestParam String fromLocation,
-            @RequestParam String toLocation,
-            @RequestParam("fromDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate fromDate,
-            @RequestParam("toDate") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate toDate,
-            @RequestParam String totalDuration,
-            @RequestParam("fromTime") @DateTimeFormat(pattern = "HH:mm") LocalTime fromTime,
-            @RequestParam("toTime") @DateTimeFormat(pattern = "HH:mm") LocalTime toTime,
-            @RequestParam double price,
-            @RequestParam int totalSeats,
-            @RequestParam int availableSeats
-    ) {
-        Bus bus = new Bus();
-        bus.setBusNumber(busNumber);
-        bus.setBusType(busType);
-        bus.setFromLocation(fromLocation);
-        bus.setToLocation(toLocation);
-        bus.setFromDate(fromDate);
-        bus.setToDate(toDate);
-        bus.setTotalDuration(totalDuration);
-        bus.setFromTime(fromTime);
-        bus.setToTime(toTime);
-        bus.setPrice(price);
-        bus.setTotalSeats(totalSeats);
-        bus.setAvailableSeats(availableSeats);
-
-        return null;
+    @PostMapping("/add-bus")
+    public ResponseEntity<?> addBus(@RequestBody BusDto busDto){
+        BusDto dto = busService.addBus(busDto);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
 

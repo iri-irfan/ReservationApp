@@ -15,12 +15,10 @@ public class UserRegistration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private long id;
     private String name;
     private String email;
     private String password;
-
     @Lob
     @Column(name = "profile_picture", length = 101024)
     private byte[] profilePicture;
