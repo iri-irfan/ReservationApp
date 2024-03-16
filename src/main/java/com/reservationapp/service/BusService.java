@@ -6,6 +6,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class BusService {
@@ -19,24 +22,10 @@ public class BusService {
     @Autowired
     private SubRouteRepository subRouteRepository;
 
-
     public BusService(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-    Bus mapToEntityForBus(BusDto busDto) {
-        Bus bus = modelMapper.map(busDto, Bus.class);
-        return bus;
-    }
-BusDto mapToDto(Bus bus){
-    BusDto dto = modelMapper.map(bus, BusDto.class);
-    return dto;
-}
-
-    SubRoute mapToEntityForSubRoute(SubRouteDto subRouteDto) {
-        SubRoute mapped = modelMapper.map(subRouteDto, SubRoute.class);
-        return mapped;
-    }
 
     public BusDto addBus(BusDto busDto) {
 
@@ -46,6 +35,73 @@ BusDto mapToDto(Bus bus){
         return dto;
 
     }
+
+    public List<SearchListOfBusesDto> getAllBuses(String fromLocation, String toLocation, String fromDate) {
+
+        List<Route> routes = routeRepository.findByFromLocationAndToLocationAndFromDate(fromLocation, toLocation, fromDate);
+        List<SubRoute> subRoutes = subRouteRepository.findByFromLocationAndToLocationAndFromDate(fromLocation, toLocation, fromDate);
+        List<SearchListOfBusesDto> buses = new ArrayList<>();
+
+
+        if (routes !=null){
+            for (Route route: routes){
+                Bus bus = busRepository.findById(route.getBusId()).get();
+                SearchListOfBusesDto searchListofBusesDto = maptoSearchListOfBusesDto(bus, route);
+                buses.add(searchListofBusesDto);
+            }
+            return buses;
+        }
+        if (subRoutes !=null){
+            for (SubRoute route : subRoutes) {
+                Bus bus = busRepository.findById(route.getBusId()).get();
+                SearchListOfBusesDto searchListofBusesDto = maptoListOfBusDtos(bus, route);
+                buses.add(searchListofBusesDto);
+            }
+            return buses;
+        }
+
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    SearchListOfBusesDto maptoSearchListOfBusesDto(Bus bus, Route route) {
+        SearchListOfBusesDto searchListofBusesDto = modelMapper.map(bus, SearchListOfBusesDto.class);
+        modelMapper.map(route, searchListofBusesDto);
+        return searchListofBusesDto;
+    }
+
+    SearchListOfBusesDto maptoListOfBusDtos(Bus bus, SubRoute route) {
+        SearchListOfBusesDto searchListofBusesDto = modelMapper.map(bus, SearchListOfBusesDto.class);
+        modelMapper.map(route, searchListofBusesDto);
+        return searchListofBusesDto;
+    }
+
+    Bus mapToEntityForBus(BusDto busDto) {
+        Bus bus = modelMapper.map(busDto, Bus.class);
+        return bus;
+    }
+    BusDto mapToDto(Bus bus){
+        BusDto dto = modelMapper.map(bus, BusDto.class);
+        return dto;
+    }
+
+
+
+
 }
 
 

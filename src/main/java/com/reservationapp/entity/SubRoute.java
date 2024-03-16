@@ -21,8 +21,9 @@ public class SubRoute {
     private String fromTime;
     private String toTime;
 
-    @Column(name = "route_id", nullable = false)
+    @Column(name = "route_id",nullable = false)
     private long routeId;
+    private long busId;
 
 
 }

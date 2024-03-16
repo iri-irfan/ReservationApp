@@ -22,10 +22,13 @@ public class RouteService {
         Bus bus = busRepository.findById(busId).orElseThrow(
                 () -> new ResourceNotFoundException("Bus not added")
         );
+
+
         Route r = routeRepository.findByBusId(route.getBusId());
 
         if (r!=null) {
-            throw new ResourceNotFoundException("Route was already added");
+            throw new ResourceNotFoundException("Route is already added");
+
         }if (r==null){
             routeRepository.save(route);
             return route;

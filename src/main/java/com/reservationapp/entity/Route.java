@@ -3,9 +3,6 @@ package com.reservationapp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Data
 @AllArgsConstructor
@@ -24,6 +21,6 @@ public class Route {
     private String toTime;
 
     @Column(name = "bus_id", unique = true,nullable = false)
-    public Long busId;
+    public long busId;
 
 }
